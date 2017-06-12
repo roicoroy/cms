@@ -9,6 +9,7 @@ exports.install = function() {
 
 	// FILES
 	F.file('/download/', file_read);
+	F.routeDownload('/download/');
 };
 
 // ==========================================================================

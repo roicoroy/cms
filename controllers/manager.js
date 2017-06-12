@@ -51,6 +51,12 @@ exports.install = function() {
 	F.route(url + '/api/newsletter/stats/',    json_stats,  ['*Newsletter']);
 	F.route(url + '/newsletter/export/',       file_newsletter, ['*Newsletter']);
 
+	//vitrini
+	// F.route(url + '/api/vitrini/',          json_query,  ['*Vitrini']);
+	// F.route(url + '/api/vitrini/clear/',    json_clear,  ['*Vitrini']);
+	// F.route(url + '/api/vitrini/stats/',    json_stats,  ['*Vitrini']);
+	// F.route(url + '/vitrini/export/',       file_newsletter, ['*Vitrini']);
+
 	// SETTINGS
 	F.route(url + '/api/settings/',            json_settings, ['*Settings']);
 	F.route(url + '/api/settings/',            json_settings_save, ['put', '*Settings']);

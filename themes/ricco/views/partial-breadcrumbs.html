@@ -1,0 +1,11 @@
+<div class="container">
+		<div class="row hidden-xs">
+			<nav class="breadcrumb col-md-12">
+				<ul>
+					@{foreach m in sitemap()}
+						<li>@{if !m.first}<span class="fa fa-caret-right"></span>@{fi}<a href="@{m.url}">@{m.name}</a></li>
+					@{end}
+				</ul>
+			</nav>
+		</div>
+	</div>

@@ -1,0 +1,49 @@
+
+<div data-jc-scope="?">
+
+    <div data-jc="visible" data-jc-path="response" data-if="value && value.success" class="hidden">
+        <div class="message-success"><i class="fa fa-check-circle"></i>@(Thanks, the contact form has been sent successfully.)</div>
+        <br />
+    </div>
+
+    <div data-jc="visible" data-jc-path="response" data-if="value == null || !value.success">
+        <div class="row">
+            <div class="col-sm-6 m">
+                <div data-jc="textbox" data-jc-path="productone" data-maxlength="30">@(First name)</div>
+            </div>
+            <div class="col-sm-6 m">
+                <div data-jc="textbox" data-jc-path="producttwo" data-maxlength="30">@(producttwo)</div>
+            </div>
+            <div class="col-sm-6 m">
+                <div data-jc="textbox" data-jc-path="productthree" data-maxlength="30">@(productthree)</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6 m">
+                <div data-jc="textbox" data-jc-path="productfour">@(productfour)</div>
+            </div>
+        </div>
+
+        
+        <br />
+
+        <div data-jc="error" data-jc-path="response"></div>
+
+        <div class="row">
+            <div class="col-sm-6 m" data-jc="validation" data-jc-path="?">
+                <button class="button exec" disabled="" data-exec="#vitrini.submit">@(SUBMIT)</button>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    OPERATION('vitrini.submit', function(el) {
+        var component = el.closest('[data-jc]').component();
+        AJAX('POST api/vitrini/', component.get(), component.pathscope + '.response');
+    });
+</script>
+

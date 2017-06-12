@@ -13,6 +13,17 @@ GETSCHEMA('Widget').addTransform('d5467a1697', function(error, model, data, call
 	GETSCHEMA('Post').query(options, (err, response) => callback(F.view('partial-blogs', response)));
 });
 
+// Beef
+// k2467a5697 is Widget ID
+GETSCHEMA('Widget').addTransform('k2467a5697', function(error, model, data, callback) {
+	// data.settings
+	// data.page
+	// data.controller
+	var options = {};
+	options.max = data.settings || '6';
+	GETSCHEMA('Post').query(options, (err, response) => callback(F.view('partial-blogs', response)));
+});
+
 // Contact form
 // 23cee236ba is Widget ID
 GETSCHEMA('Widget').addTransform('23cee236ba', function(error, model, data, callback) {
@@ -23,3 +34,6 @@ GETSCHEMA('Widget').addTransform('23cee236ba', function(error, model, data, call
 
 	callback(F.view('widgets/contactform'));
 });
+
+
+

@@ -2,10 +2,29 @@ body{
     /*background:#eee;*/
 }
 
+
+
+/* EXAMPLE 3
+
+line height is 20px by default so add 30px top and bottom to equal the new .navbar-brand 80px height  */
+
+.navbar-brand {
+  height: 80px;
+}
+
+.nav >li >a {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+.navbar-toggle {
+  padding: 10px;
+  margin: 25px 15px 25px 0;
+}
+
 .jumbotron {
     text-align: center;
     margin-bottom: 0px;
-    background-image: url(../img/goiaba.jpg);
+    
     background-position: 0% 25%;
     background-size: cover;
     background-repeat: no-repeat;

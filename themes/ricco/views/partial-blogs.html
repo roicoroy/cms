@@ -1,6 +1,7 @@
 <div class="row">
 	@{foreach m in model.items}
-	<div class="col-md-10 col-md-offset-1">
+	<!-- <div class="col-md-10 col-md-offset-1"> -->
+	<div class="col-md-12">
 		<div class="b"><a href="@{sitemap_url('blogsdetail', m.linker)}">@{m.name}</a></div>
 		<div class="fs11">@{m.datecreated.parseDate().format('yyyy-MM-dd HH:mm')}</div>
 		<p>@{m.perex}</p>
@@ -8,6 +9,10 @@
 	</div>
 	@{end}
 </div>
+
+
+
+
 
 @{if !model.count}
 	<div class="row" style="margin-top:30px;margin-bottom:100px" id="empty">

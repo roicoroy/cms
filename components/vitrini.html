@@ -1,0 +1,139 @@
+<script type="text/totaljs">
+    var Path = require('path');
+    // +v2.5.0 optional
+    exports.group = 'Picutre Upload to Vitrini';
+
+    exports.install = function() {
+       
+        // F.route('/api/vitrini',            json_query,  ['*Vitrini']);          // GET (default)
+        // F.route('/api/vitrini/{id}',       json_read,    ['*Vitrini']);          // GET (default)
+        // // F.route('/api/vitrini',            json_save,   ['*Vitrini', 'post' 'upload']);  // POST
+        // F.route('/api/vitrini/upload',                  upload,        ['post', 'upload', 10000], 3084); // 3 MB
+        // F.route('/api/vitrini/upload/base64',           upload_base64, ['post', 10000], 2048); // 2 MB
+
+
+        F.route('/api/vitrini',            query,  ['*Vitrini']);          // GET (default)
+        F.route('/api/vitrini/{id}',       get,    ['*Vitrini']);          // GET (default)
+        F.route('/api/vitrini',            save,   ['*Vitrini', 'post']);  // POST
+
+        F.route('/api/vitrini/upload',                  upload,        ['post', 'upload', 10000], 3084); // 3 MB
+        F.route('/api/vitrini/upload/base64',           upload_base64, ['post', 10000], 2048); // 2 MB
+        // // F.file('api/vitrini/download/', file_read);
+
+    };
+//products
+function query() {
+    // `this` is an instance of Controller
+    // https://docs.totaljs.com/latest/en.html#api~FrameworkController
+    var self = this;
+    // $query is Schema method that we defined using `schema.setQuery(...)`
+    //self.$query(self.query, self.callback());
+    // instead of self.callback you can supply your own callback function
+    self.$query(self.query, function(err, result){
+         self.json(result);
+    });
+}
+
+function get(id) {
+    // the id is parsed by framework from url `/api/products/{id}`
+    var self = this;
+    // $get is Schema method that we defined using `schema.setGet(...)`
+    this.$get(id, self.callback());    
+}
+
+function save() {
+    var self = this;
+    // $save is Schema method that we defined using `schema.setSave(...)`
+    // the $save method is available on this.body for POST request
+    this.body.$save(self.callback());
+    // another way to use it is
+    // this.$save(this.body, self.callback());
+
+}
+
+function remove(id) {
+    var self = this;
+    // $remove is Schema method that we defined using `schema.setRemove(...)`
+    this.$remove(id, self.callback());
+}
+
+
+
+// Upload (multiple) pictures
+function upload() {
+
+    var self = this;
+    var id = [];
+
+    self.files.wait(function(file, next) {
+        file.read(function(err, data) {
+
+            // Store current file into the HDD
+            file.extension = U.getExtension(file.filename);
+            id.push(NOSQL('files').binary.insert(file.filename, data) + '.' + file.extension);
+
+            // Next file
+            setTimeout(next, 100);
+        });
+
+    }, () => self.json(id));
+}
+
+// Upload base64
+function upload_base64() {
+    var self = this;
+
+    if (!self.body.file) {
+        self.json(null);
+        return;
+    }
+    
+
+    var type = self.body.file.base64ContentType();
+    var ext;
+
+    switch (type) {
+        case 'image/png':
+            ext = '.png';
+            break;
+        case 'image/jpeg':
+            ext = '.jpg';
+            break;
+        case 'image/gif':
+            ext = '.gif';
+            break;
+        default:
+            self.json(null);
+            return;
+    }
+
+    var data = self.body.file.base64ToBuffer();
+    var id = NOSQL('files').binary.insert('base64' + ext, data);
+    self.json('/download/' + id + ext);
+}
+
+
+</script>
+
+<style>
+    
+</style>
+
+<div class="vitrini">
+    <div>Vitrini widget:</div>
+    
+
+    <form enctype="multipart/form-data"  action="/api/vitrini/upload" method="post" id="form1">
+        picture: <input type="file" name="productone"><br>
+    </form>
+
+    <button type="submit" form="form1" value="Submit">Submit</button>
+
+    <!-- <div style="background-color:#F0F0F0;padding:3px 10px">
+        Uploaded: <b style="color:black">@{model.productone}</b>
+    </div> -->
+
+
+
+</div>
+

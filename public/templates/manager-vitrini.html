@@ -1,0 +1,74 @@
+<div class="filter">
+	<div class="container">
+		<nav class="buttons">
+			<a href="javascript:void(0)" class="csvexport"><i class="fa fa-table"></i><span>@(Download <b>CSV</b>)</span></a>
+		</nav>
+		<div class="caption"><span class="fa fa-envelope mr5"></span> @(Newsletter)</div>
+		<div class="row">
+			<div class="col-md-3 m">
+				<div data-jc="textbox" data-jc-path="newsletter.filter.search" data-placeholder="@(Search newsletter ...)" data-jc-type="search"></div>
+				<div class="help" data-jc="template" data-jc-path="newsletter.grid">
+					<h1>hello world</h1>
+				</div>
+			</div>
+			<div class="col-md-3 m">
+				<div data-jc="dropdown" data-jc-path="newsletter.filter.language" data-source="languages" data-empty="@(All languages)"></div>
+			</div>
+			<div class="col-md-6 m">
+				<div data-jc="nosqlcounter" data-jc-path="newsletter.stats" style="height:48px" data-count="16"></div>
+				<div class="help"><i class="fa fa-bar-chart"></i>@(Stats for last 16 months)</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div data-jc="grid" data-jc-path="newsletter.grid" data-jc-id="newsletter.grid" data-max="auto" data-page="@(Page: #)" data-pages="@(# pages,# page,# pages,# pages)" data-items="@(# items,# item,# items,# items)" data-empty="@(Database does not contain any data.)">
+		<script type="text/html">
+		<tr>
+			<td><span class="fa fa-envelope"></span> {{ email }}</td>
+			<td style="width:120px" class="hidden-xs fs11 active"><i class="fa fa-language"></i> {{ if language }}{{ language }}{{ else }}@(unkown){{ fi }}</td>
+			<td style="width:160px" class="silver hidden-xs">{{ ip }}</td>
+			<td style="width:100px" class="ui-center active">{{ datecreated | format('@(yyyy-MM-dd)') }}</td>
+		</tr>
+		</script>
+	</div>
+	<br />
+</div>
+
+<script>
+
+	var vitrini = {};
+	vitrini.grid = {};
+	vitrini.filter = {};
+	vitrini.filter.page = 1;
+
+	ON('#vitrini.grid', function(component) {
+		// Max items per page
+		vitrini.filter.max = component.max;
+		newsletter_refresh(true);
+	});
+
+	// Watch for changes in vitrini filter
+	WATCH('vitrini.filter.*', function(path, value) {
+		!NOTMODIFIED('vitrini.filter', vitrini.filter) && vitrini(path !== 'vitrini.filter.page');
+	});
+
+	// Method refreshes grid
+	function newsletter_refresh(reset) {
+		if (reset)
+			newsletter.filter.page = 1;
+		AJAX('GET {0}/api/vitrini/'.format(managerurl), vitrini.filter, 'vitrini.grid');
+	}
+
+	AJAX('GET {0}/api/vitrini/stats/'.format(managerurl), 'vitrini.stats');
+	$('.csvexport').attr('href', '{0}/vitrini/export/'.format(managerurl));
+
+
+
+    OPERATION('vitrini.submit', function(el) {
+        var component = el.closest('[data-jc]').component();
+        AJAX('POST api/vitrini/', component.get(), component.pathscope + '.response');
+    });
+
+</script>
